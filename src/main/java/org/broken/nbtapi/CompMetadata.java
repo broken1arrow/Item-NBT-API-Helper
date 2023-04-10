@@ -14,10 +14,10 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import static de.tr7zw.changeme.nbtapi.utils.MinecraftVersion.getVersion;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import static org.broken.nbtapi.utillity.ServerVersion.isHasScoreboardTags;
 
 /**
@@ -33,15 +33,13 @@ public final class CompMetadata {
 	 */
 	private static final String DELIMITER = "%-%";
 	private final Plugin plugin;
-	
+
 	public CompMetadata(Plugin plugin) {
 		this(plugin, false);
 	}
 
 	public CompMetadata(Plugin plugin, boolean turnOffLogger) {
 		this.plugin = plugin;
-		getVersion(turnOffLogger);
-		ServerVersion.setServerVersion(plugin);
 	}
 
 	// ----------------------------------------------------------------------------------------
@@ -56,8 +54,8 @@ public final class CompMetadata {
 	 * @param value you want to set on this item.
 	 * @return clone of your item with metadata set.
 	 */
-	public ItemStack setMetadata(@NotNull final ItemStack item, @NotNull final String key,
-	                             @NotNull final Object value) {
+	public ItemStack setMetadata(@Nonnull final ItemStack item, @Nonnull final String key,
+	                             @Nonnull final Object value) {
 		Valid.checkNotNull(item, "Setting NBT tag got null item");
 
 		final NBTItem nbt = new NBTItem(item);
@@ -76,7 +74,7 @@ public final class CompMetadata {
 	 * @param entity you want to set metadata on.
 	 * @param tag    you want to set on this entity.
 	 */
-	public void setMetadata(@NotNull final Entity entity, @NotNull final String tag) {
+	public void setMetadata(@Nonnull final Entity entity, @Nonnull final String tag) {
 		setMetadata(entity, tag, tag);
 	}
 
@@ -87,7 +85,7 @@ public final class CompMetadata {
 	 * @param key    you want to set on this entity.
 	 * @param value  you want to set on this entity.
 	 */
-	public void setMetadata(@NotNull final Entity entity, @NotNull final String key, @NotNull final String value) {
+	public void setMetadata(@Nonnull final Entity entity, @Nonnull final String key, @Nonnull final String value) {
 		Valid.checkNotNull(entity);
 
 		final String tag = format(key, value);
@@ -115,8 +113,8 @@ public final class CompMetadata {
 	 * @param key        you want to set on this tileEntity.
 	 * @param value      you want to set on this tileEntity.
 	 */
-	public void setMetadata(@NotNull final BlockState tileEntity, @NotNull final String key,
-	                        @NotNull final String value) {
+	public void setMetadata(@Nonnull final BlockState tileEntity, @Nonnull final String key,
+	                        @Nonnull final String value) {
 		Valid.checkNotNull(tileEntity);
 		Valid.checkNotNull(key);
 		Valid.checkNotNull(value);
@@ -146,7 +144,7 @@ public final class CompMetadata {
 	 * @param entity you want set metadata.
 	 * @param tag    you want to set.
 	 */
-	public void setTempMetadata(@NotNull final Entity entity, @NotNull final String tag) {
+	public void setTempMetadata(@Nonnull final Entity entity, @Nonnull final String tag) {
 		entity.setMetadata(createTempMetadataKey(tag), new FixedMetadataValue(plugin, tag));
 	}
 
@@ -161,7 +159,7 @@ public final class CompMetadata {
 	 * @param tag    you want to set.
 	 * @param key    you want to set.
 	 */
-	public void setTempMetadata(@NotNull final Entity entity, @NotNull final String tag, @NotNull final Object key) {
+	public void setTempMetadata(@Nonnull final Entity entity, @Nonnull final String tag, @Nonnull final Object key) {
 		entity.setMetadata(createTempMetadataKey(tag), new FixedMetadataValue(plugin, key));
 	}
 
@@ -181,7 +179,7 @@ public final class CompMetadata {
 	 * @return metadata value.
 	 */
 	@Nullable
-	public String getMetadata(@NotNull final ItemStack item, @NotNull final String key) {
+	public String getMetadata(@Nonnull final ItemStack item, @Nonnull final String key) {
 		Valid.checkNotNull(item, "Reading NBT tag got null item");
 		if (item.getType() == Material.AIR)
 			// if (item == null || CompMaterial.isAir(item.getType()))
@@ -203,7 +201,7 @@ public final class CompMetadata {
 	 * @return metadata value.
 	 */
 	@Nullable
-	public <T> T getMetadata(@NotNull final ItemStack item, @NotNull Class<T> clazz, @NotNull final String key) {
+	public <T> T getMetadata(@Nonnull final ItemStack item, @Nonnull Class<T> clazz, @Nonnull final String key) {
 		Valid.checkNotNull(item, "Reading NBT tag got null item");
 		if (item.getType() == Material.AIR)
 			// if (item == null || CompMaterial.isAir(item.getType()))
@@ -226,7 +224,7 @@ public final class CompMetadata {
 	 * @return the value, or null.
 	 */
 	@Nullable
-	public String getMetadata(@NotNull final Entity entity, @NotNull final String key) {
+	public String getMetadata(@Nonnull final Entity entity, @Nonnull final String key) {
 		Valid.checkNotNull(entity);
 
 		if (false)
@@ -258,7 +256,7 @@ public final class CompMetadata {
 	 * @return the value, or null.
 	 */
 	@Nullable
-	public String getMetadata(@NotNull final BlockState tileEntity, @NotNull final String key) {
+	public String getMetadata(@Nonnull final BlockState tileEntity, @Nonnull final String key) {
 		Valid.checkNotNull(tileEntity);
 		Valid.checkNotNull(key);
 
@@ -286,7 +284,7 @@ public final class CompMetadata {
 	 * @return the value you set or null.
 	 */
 	@Nullable
-	public MetadataValue getTempMetadata(@NotNull final Entity entity, @NotNull final String tag) {
+	public MetadataValue getTempMetadata(@Nonnull final Entity entity, @Nonnull final String tag) {
 		final String key = createTempMetadataKey(tag);
 
 		return entity.hasMetadata(key) ? entity.getMetadata(key).get(0) : null;
@@ -311,7 +309,7 @@ public final class CompMetadata {
 	 * @param key  you want to check this item have.
 	 * @return true if it has this key.
 	 */
-	public boolean hasMetadata(@NotNull final ItemStack item, @NotNull final String key) {
+	public boolean hasMetadata(@Nonnull final ItemStack item, @Nonnull final String key) {
 		Valid.checkBoolean(true, "NBT ItemStack tags only support MC 1.7.10+");
 		Valid.checkNotNull(item);
 
@@ -520,7 +518,7 @@ public final class CompMetadata {
 		 * entity.setMetadata(key, new FixedMetadataValue(SimplePlugin.getInstance(),
 		 * value)); } } }
 		 *
-		 * protected void addMetadata(final Entity entity, @NotNull final String key,
+		 * protected void addMetadata(final Entity entity, @Nonnull final String key,
 		 * final String value) { synchronized (LOCK) { final List<String> metadata =
 		 * entityMetadataMap.getOrPut(entity.getUniqueId(), new ArrayList<>());
 		 *

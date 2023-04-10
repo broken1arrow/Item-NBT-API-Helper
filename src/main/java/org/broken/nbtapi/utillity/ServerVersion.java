@@ -4,6 +4,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.plugin.Plugin;
 
 public enum ServerVersion {
+	v1_19_4(19.4F),
 	v1_19(19.0F),
 	v1_18_2(18.2F),
 	v1_18_1(18.1F),
@@ -62,13 +63,28 @@ public enum ServerVersion {
 	}
 
 	public static void setServerVersion(final Plugin plugin) {
-		final String[] version = plugin.getServer().getBukkitVersion().split("\\.");
-		if (version[1].startsWith("18"))
-			currentServerVersion = Float.parseFloat(version[1] + "." + version[2].substring(0, version[2].lastIndexOf("-")));
-		else
-			currentServerVersion = Float.parseFloat(version[1]);
+		final String[] strings = plugin.getServer().getBukkitVersion().split("\\.");
+		final String firstNumber;
+		String secondNumber;
+		final String firstString = strings[1];
+		if (firstString.contains("-")) {
+			firstNumber = firstString.substring(0, firstString.lastIndexOf("-"));
 
-		serverName = plugin.getServer().getName();
+			secondNumber = firstString.substring(firstString.lastIndexOf("-") + 1);
+			final int index = secondNumber.toUpperCase().indexOf("R");
+			if (index >= 0)
+				secondNumber = secondNumber.substring(index + 1);
+		} else {
+			final String secondString = strings[2];
+			firstNumber = firstString;
+			secondNumber = secondString.substring(0, secondString.lastIndexOf("-"));
+		}
+
+		final float version = Float.parseFloat(firstNumber + "." + secondNumber);
+		if (version < 18)
+			currentServerVersion = (float) Math.floor(version);
+		else
+			currentServerVersion = version;
 		checkClassesExist();
 	}
 
